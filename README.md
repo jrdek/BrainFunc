@@ -1,1 +1,1 @@
-# BFCompiler
+# BrainFunc

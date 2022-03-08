@@ -2,7 +2,6 @@ module Main where
 
 import BFEval
 import BFRep
-import Lib
 import System.Environment
 import System.IO
 

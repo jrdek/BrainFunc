@@ -1,3 +1,3 @@
-# Changelog for BFCompiler
+# Changelog for BrainFunc
 
 ## Unreleased changes
