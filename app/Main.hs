@@ -1,7 +1,8 @@
 module Main where
 
-import BFEval
+import BFEvalBase
 import BFRep
+import BFTokenEval
 import System.Environment
 import System.IO
 
@@ -21,8 +22,11 @@ main = do
     else do
         let filepath = head args
         program <- readFile filepath
-        let mach = initMachine (toBFChars program)
-        outState <- naiveEval mach
+        -- UNCOMMENT THESE LINES TO DO NAIVE EVAL
+        -- let mach = initMachine (toBFChars program)
+        -- outState <- naiveEval mach
+        -- UNCOMMENT THESE LINES TO DO FANCY EVAL
+        let mach = initTokMachine (makeCollapsedTokens program)
+        outMach <- eval mach
         putStrLn "\n"
-        -- putStrLn ("\n" ++ show outState)
         return ()

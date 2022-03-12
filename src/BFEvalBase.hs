@@ -1,10 +1,11 @@
-module BFEval where
+module BFEvalBase where
+    -- TODO: set what functions this exports
 
 import BFRep
 import Control.Monad.State
 import Data.Array
 import Data.Char
-import Data.Map (Map, lookup, findWithDefault, insert, empty)
+import Data.Map.Strict as M (Map, lookup, findWithDefault, insert, empty)
 import Text.Read
 
 {-
@@ -21,8 +22,6 @@ want the bracket handling to not be absolutely awful.
 
 TODO: Update! We're using lookup tables instead of a stack
 -}
-
-type Stack = [Int]
 
 data BFMachine = BFMachine {
     prog :: Array Int BFChar,  -- the program is immutable :)
@@ -110,7 +109,7 @@ getBrax = state (\ (BFMachine p y t c w b) -> (b, BFMachine p y t c w b))
 getBracketMatch :: Int -> StateT BFMachine IO Int
 getBracketMatch loc = do
     b <- getBrax
-    return $ case Data.Map.lookup loc b of 
+    return $ case M.lookup loc b of 
         Just loc' -> loc'
         Nothing   -> error $ "Error finding bracket match " ++ (show loc)
 
