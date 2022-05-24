@@ -90,19 +90,32 @@ toBFTokens :: String -> [BFToken]
 toBFTokens s = snd $ toBFTokensH s
 
 collapseTokensList :: [BFToken] -> [BFToken]
--- TODO: catch unmatched brackets here!
 collapseTokensList toks = case toks of 
-    (BtokAdd n) : (BtokAdd m) : rest -> collapseTokensList $ (BtokAdd $ n + m):rest
-    (BtokMov n) : (BtokMov m) : rest -> collapseTokensList $ (BtokMov $ n + m):rest
+    (BtokAdd n) : (BtokAdd m) : rest -> collapseTokensList $ if n+m /= 0 then (BtokAdd $ n + m):rest else rest
+    (BtokMov n) : (BtokMov m) : rest -> collapseTokensList $ if n+m /= 0 then (BtokMov $ n + m):rest else rest
+    (BtokWhile w) : rest -> BtokWhile (collapseTokensList w) : (collapseTokensList rest)
     tok : rest -> tok:(collapseTokensList rest)
     [] -> []
 
-makeCollapsedTokens :: String -> [BFToken]
-makeCollapsedTokens = collapseTokensList . toBFTokens
+checkBrackets :: String -> String
+checkBrackets s = if checkBracketsH 0 s == 0 then s else error "This should be unreachable..."
 
--- >>> let prog = "+++-+<+"
+checkBracketsH :: Int -> String -> Int
+checkBracketsH n s
+    | n < 0                 = error "Mismatched brackets"
+    | (s == "") && (n /= 0) = error "Mismatched brackets"
+    | s == ""               = 0  -- hooray!
+    | (s !! 0 == '[')       = checkBracketsH (n + 1) (tail s)
+    | (s !! 0 == ']')       = checkBracketsH (n - 1) (tail s)
+    | otherwise             = checkBracketsH n (tail s)
+
+
+makeCollapsedTokens :: String -> [BFToken]
+makeCollapsedTokens = collapseTokensList . toBFTokens . checkBrackets
+
+-- >>> let prog = ""
 -- >>> makeCollapsedTokens prog
--- [add 3,mov -1,add 1]
+-- [add 1,while {[while {[mov 1,while {[add 1,mov 1,while {[add -1,mov -1,add 3,mov 1]},mov -1,print]}]}]}]
 --
 
 

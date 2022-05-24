@@ -60,7 +60,7 @@ evalTok !mach = do
                     machAfterIter <- eval $ BFTokMachine block t w
                     let newTape = tape machAfterIter
                     let newWh = wh machAfterIter
-                    return $ BFTokMachine ((BtokWhile block):rest) newTape w                    
+                    return $ BFTokMachine ((BtokWhile block):rest) newTape newWh                    
 
 eval :: BFTokMachine -> IO BFTokMachine
 eval !mach = do

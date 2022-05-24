@@ -28,6 +28,7 @@ library
       BFEvalBase
       BFRep
       BFTokenEval
+      BFTokToC
   other-modules:
       Paths_BrainFunc
   hs-source-dirs:
